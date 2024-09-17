@@ -80,7 +80,6 @@ goto menu
 :show_file_tree
 cls
 echo Showing file tree of the hard drive...
-:: Запуск PowerShell от имени администратора для показа дерева файлов на жестком диске
 start "" "%SystemDrive%\Program Files\PowerShell\7\pwsh.exe" -NoProfile -Command "Get-ChildItem C:\ -Recurse | Format-Wide -Property FullName" || goto error
 pause
 goto menu
