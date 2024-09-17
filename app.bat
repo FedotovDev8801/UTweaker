@@ -2,7 +2,7 @@
 title UTweaker
 color 0A
 
-set "powershell_path=%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe"
+set "powershell_path=%SystemDrive%\Program Files\PowerShell\7\pwsh.exe"
 powershell -Command "If (-Not([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {Start-Process '%powershell_path%' '-ExecutionPolicy Bypass -NoProfile -File \"%~f0\"' -Verb RunAs; exit}"
 
 :menu
@@ -20,7 +20,8 @@ echo 2. Disable system restore
 echo 3. Change pagefile size
 echo 4. Show hidden files and folders
 echo 5. Run PowerShell script for system info (Admin)
-echo 6. Exit
+echo 6. Show File Tree of HDD (Admin)
+echo 7. Exit
 echo ========================================
 set /p choice=Enter the number of your choice: 
 
@@ -29,7 +30,8 @@ if %choice%==2 goto disable_restore
 if %choice%==3 goto change_pagefile
 if %choice%==4 goto show_hidden
 if %choice%==5 goto run_powershell_admin
-if %choice%==6 goto exit
+if %choice%==6 goto show_file_tree
+if %choice%==7 goto exit
 goto error
 
 :speedup_apps
@@ -71,18 +73,26 @@ goto menu
 :run_powershell_admin
 cls
 echo Running PowerShell script for system information with admin rights...
-start powersh\powershell.exe -ExecutionPolicy Bypass -NoProfile -File powersh\sysinfo.ps1 -Verb RunAs || goto error
+start "" "%SystemDrive%\Program Files\PowerShell\7\pwsh.exe" -ExecutionPolicy Bypass -NoProfile -File powersh\sysinfo.ps1 || goto error
+pause
+goto menu
+
+:show_file_tree
+cls
+echo Showing file tree of the hard drive...
+:: Запуск PowerShell от имени администратора для показа дерева файлов на жестком диске
+start "" "%SystemDrive%\Program Files\PowerShell\7\pwsh.exe" -NoProfile -Command "Get-ChildItem C:\ -Recurse | Format-Wide -Property FullName" || goto error
 pause
 goto menu
 
 :error
 cls
-goto menu
+echo An error occurred.
 start "" "popups/error.vbs"
+pause
+goto menu
 
 :exit
 cls
-echo Thank you for using UTweaker!
-pause
 exit
 
