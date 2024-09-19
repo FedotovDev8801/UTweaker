@@ -21,7 +21,10 @@ echo 3. Change pagefile size
 echo 4. Show hidden files and folders
 echo 5. Run PowerShell script for system info (Admin)
 echo 6. Show File Tree of HDD (Admin)
-echo 7. Exit
+echo 7. Clear All Cache
+echo 8. Rename Operating System
+echo 9. Optimize network settings for speed
+echo 10. Exit
 echo ========================================
 set /p choice=Enter the number of your choice: 
 
@@ -31,7 +34,10 @@ if %choice%==3 goto change_pagefile
 if %choice%==4 goto show_hidden
 if %choice%==5 goto run_powershell_admin
 if %choice%==6 goto show_file_tree
-if %choice%==7 goto exit
+if %choice%==7 goto clear_cache
+if %choice%==8 goto rename_os
+if %choice%==9 goto optimize_network
+if %choice%==10 goto exit
 goto error
 
 :speedup_apps
@@ -84,14 +90,42 @@ start "" "%SystemDrive%\Program Files\PowerShell\7\pwsh.exe" -NoProfile -Command
 pause
 goto menu
 
+:clear_cache
+cls
+echo Clearing all unnecessary cache...
+rd /s /q "%temp%" >nul 2>&1 || goto error
+del /s /q "%SystemRoot%\Temp\*" >nul 2>&1 || goto error
+echo Cache has been cleared successfully.
+pause
+goto menu
+
+:rename_os
+cls
+echo Renaming the operating system...
+set /p new_os_name=Enter the new OS name: 
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v ProductName /t REG_SZ /d "%new_os_name%" /f >nul 2>&1 || goto error
+echo OS name changed to %new_os_name%.
+pause
+goto menu
+
+:optimize_network
+cls
+echo Optimizing network settings for better speed...
+netsh interface tcp set global autotuninglevel=normal >nul 2>&1 || goto error
+netsh interface tcp set global rss=enabled >nul 2>&1 || goto error
+echo Network settings have been optimized.
+pause
+goto menu
+
 :error
 cls
-echo An error occurred.
+echo An error occurred
 start "" "popups/error.vbs"
 pause
 goto menu
 
 :exit
 cls
+echo Thank you for using UTweaker!
+pause
 exit
-
