@@ -1,3 +1,6 @@
+# UTweaker is archived, use it's [remake](https://github.com/FedotovDev8801/uTweaker-Remade) instead.
+
+
 How to use UTweaker:
 
 Navigation: Enter number of action
